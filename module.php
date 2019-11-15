@@ -1,4 +1,14 @@
 <?php
+
+class SiteChecker extends Module {
+
+    $this->name = "SiteChecker";
+    $this->routes = $this->siteCheckerModRoutes();
+    $this->dependencies = array();
+    $this->files = $this->siteCheckerModRoutes()["files"];
+
+}
+
 function siteCheckerModRoutes() {
     $siteCheckerModRoutes = array(
         "init-probemanager" => array(
