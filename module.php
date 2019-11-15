@@ -1,11 +1,16 @@
 <?php
 
 class SiteChecker extends Module {
+    private $deps = array();
 
-    $this->name = "SiteChecker";
-    $this->routes = $this->siteCheckerModRoutes();
-    $this->dependencies = array();
-    $this->files = $this->siteCheckerModRoutes()["files"];
+    public function __construct() {
+        parent::__construct();
+
+        $this->name = "SiteChecker";
+        $this->routes = $this->siteCheckerModRoutes();
+        $this->dependencies = $this->deps;
+        $this->files = $this->siteCheckerModRoutes()["files"];
+    }
 
 }
 
