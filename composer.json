@@ -1,4 +1,14 @@
 {
-    "name":"clickpdx/sitestatus",
-    "description":"Determine server health."
+    "name": "clickpdx/sitestatus",
+    "description": "Checks the status of sites.",
+    "type": "wordpress-plugin",
+    "authors": [
+        {
+            "name": "Nicholas Glesmann",
+            "email": "nicholasglesmann@gmail.com"
+        }
+    ],
+    "require": {
+        "composer/installers":"~1.0"
+    }
 }
