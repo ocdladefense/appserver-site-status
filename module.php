@@ -1,21 +1,21 @@
 <?php
 
-class SiteChecker extends Module {
+class SiteStatusModule extends Module {
     private $deps = array();
 
     public function __construct() {
         parent::__construct();
 
-        $this->name = "sitechecker";
-        $this->routes = siteCheckerModRoutes();
+        $this->name = "sitestatus";
+        $this->routes = siteStatusModRoutes();
         $this->dependencies = $this->deps;
-        $this->files = siteCheckerModRoutes()["files"];
+        $this->files = siteStatusModRoutes()["init-probemanager"]["files"];
     }
 
 }
 
-function siteCheckerModRoutes() {
-    $siteCheckerModRoutes = array(
+function siteStatusModRoutes() {
+    $siteStatusModRoutes = array(
         "init-probemanager" => array(
             "callback" => "runProbes",
             "files" => array(
@@ -31,7 +31,7 @@ function siteCheckerModRoutes() {
             )
         )
     );
-    return $siteCheckerModRoutes;
+    return $siteStatusModRoutes;
 }
 
 function runProbes() {
