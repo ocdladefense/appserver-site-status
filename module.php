@@ -6,10 +6,10 @@ class SiteChecker extends Module {
     public function __construct() {
         parent::__construct();
 
-        $this->name = "SiteChecker";
-        $this->routes = $this->siteCheckerModRoutes();
+        $this->name = "sitechecker";
+        $this->routes = siteCheckerModRoutes();
         $this->dependencies = $this->deps;
-        $this->files = $this->siteCheckerModRoutes()["files"];
+        $this->files = siteCheckerModRoutes()["files"];
     }
 
 }
