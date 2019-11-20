@@ -2,7 +2,7 @@
 
 class ProbeManager {
 
-    private $savePath = BASE_PATH."/results/";
+    private $savePath = BASE_PATH."/content/sitestatus/results/";
 
     private $domainRecords;
 
@@ -10,8 +10,7 @@ class ProbeManager {
     private $endTime;
 
     function __construct() {
-        define("SITE_HEALTHY", 1);
-        define("SITE_UNHEALTHY", 2);
+
     }
 
     function getTime() {
@@ -63,7 +62,7 @@ class ProbeManager {
             $probeResults = ProbeManager::probe($domainRecord->domain, $probes);
 
             // combine the probe results together into one object
-            $output = ProbeRenderer::ResultCombinedFormat($domainRecord, $probeResults, $probeDate);
+            $output = ProbeRenderer::resultCombinedFormat($domainRecord, $probeResults, $probeDate);
 
             // create a name for the result file
             $fileName = $domainRecord->name."-".$probeDate;

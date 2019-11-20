@@ -34,7 +34,11 @@ class FileSystem {
 
     // takes an object, a name for the new file, a save path for the new file, and the new file's extension
     public static function save($object, $name, $savePath, $type) {
-        
+        $dir = scandir(getPathToContent()."/sitestatus");
+        if(!in_array("results", $dir)) {
+            mkdir(getPathToContent()."/sitestatus/results");
+        }
+
         if($type == FileSystem::$FILE_TYPE_JSON) {
             $handle = fopen($savePath.$name.".json", 'w');
             fwrite($handle, json_encode($object, JSON_UNESCAPED_SLASHES));

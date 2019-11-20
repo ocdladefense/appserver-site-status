@@ -5,7 +5,7 @@ class ProbeRenderer {
     function __construct() {
     }
 
-    public static function ResultCombinedFormat($domainRecord, $probeResults, $probeDate) {
+    public static function resultCombinedFormat($domainRecord, $probeResults, $probeDate) {
 
         $name = "";
         $comments = "";
@@ -46,7 +46,7 @@ class ProbeRenderer {
         return $output;  
     }
 
-    public static function ResultIndividualFormat($domainRecord, $probeResult, $probeDate) {
+    public static function resultIndividualFormat($domainRecord, $probeResult, $probeDate) {
         // this could maybe be used to package an individual probe result in case expectedStatusCode and actualStatusCode are different
     }
 }
