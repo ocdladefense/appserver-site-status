@@ -3,6 +3,7 @@
 define("SITE_HEALTHY", 1);
 define("SITE_UNHEALTHY", 2);
 
+define("SITES_PATH", BASE_PATH."/site-json");
 define("RESULTS_PATH", BASE_PATH."/content/sitestatus/results");
 
 class SiteStatusModule extends Module {
@@ -40,6 +41,10 @@ function siteStatusModRoutes() {
             "files" => array(
                 "FileSystem.php"
             )
+        ),
+        "site-status" => array(
+            "content-type" => "application/json",
+            "callback" => "getSiteStatus"
         )
     );
     return $siteStatusModRoutes;
@@ -47,7 +52,7 @@ function siteStatusModRoutes() {
 
 function runProbes() {
     
-    $probeManager = ProbeManager::newFromFileSystem(BASE_PATH."/site-json");
+    $probeManager = ProbeManager::newFromFileSystem(SITES_PATH);
     $probeManager->doValidation();
     $probeManager->doProbes();
     $probeManager->renderOutput();
@@ -55,26 +60,27 @@ function runProbes() {
     // print_r($domainRecord);
 }
 
-function allSiteStatus() {
-    print_r("Working");
+function getSiteStatue($url, $status = "200") {
 
+}
+
+
+function allSiteStatus() {
+
+    // make a list of paths to all probe result .JSON files
     $filePaths = FileSystem::list(RESULTS_PATH."/*.json");
 
+    // convert to objects
     $objects = [];
-
     foreach($filePaths as $filePath) {
         $objects[] = FileSystem::toObject($filePath, FileSystem::$FILE_TYPE_JSON);
     }
 
-    // var_dump($objects);
-
+    // make a list of all the unique domains from the objects
     $domains = [];
-
     foreach($objects as $object) {
         $domains[] = $object->domain;
     }
-
-    // var_dump($domains);
 
     $uniqueDomains = array_unique($domains);
 
@@ -84,7 +90,8 @@ function allSiteStatus() {
         }
     }          
 
-    // var_dump($uniqueDomains);
+
+    // make a list of the most recent result from each domain
     $allCombinedFormats = [];
 
     foreach($uniqueDomains as $uniqueDomain) {
@@ -104,17 +111,17 @@ function allSiteStatus() {
         $allCombinedFormats[] = $domainObjects[count($domainObjects) - 1];
     }
 
-    var_dump($allCombinedFormats);
 
-
+    // format data to be sent to the template
     function getSiteStatus($format) {
-        return array("domain" => $format->domain, "overallSiteStatus" => $format->overallSiteStatus);
+        return array("name" => $format->name, "domain" => $format->domain, "overallSiteStatus" => $format->overallSiteStatus, 
+                    "probeResults" => $format->probeResults);
     }
 
     $siteStatuses = array_map("getSiteStatus", $allCombinedFormats);
 
-    var_dump($siteStatuses);
 
+    // load and render
     $template = new Template("site-status");
     $content = $template->render(array("sites" => $siteStatuses));
     $template = new Template("page");
