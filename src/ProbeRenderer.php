@@ -5,7 +5,7 @@ class ProbeRenderer {
     function __construct() {
     }
 
-    public static function resultCombinedFormat($domainRecord, $probeResults, $probeDate) {
+    public static function resultCombinedFormat($domainRecord, $probeResults, $probeDate, $timeStamp) {
 
         $name = "";
         $comments = "";
@@ -37,6 +37,7 @@ class ProbeRenderer {
             'name' => $name,
             'domain' => $domainRecord->domain,
             'date' => $probeDate,
+            'timestamp' => $timeStamp,
             'totalResponseTime' => $totalResponseTime,
             'overallSiteStatus' => $overallSiteStatus,
             'comments' => $comments,

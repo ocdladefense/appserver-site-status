@@ -13,8 +13,12 @@ class ProbeManager {
 
     }
 
-    function getTime() {
+    function getMicroTime() {
         return microtime(true);
+    }
+
+    function getTime() {
+        return time();
     }
 
     function getDate() {
@@ -52,8 +56,10 @@ class ProbeManager {
     }
 
     function doProbes() {
-        $this->startTime = $this->getTime();
-        
+        $this->startTime = $this->getMicroTime();
+
+        $timeStamp = $this->getTime();
+
         foreach($this->domainRecords as $domainRecord) {
             // get an array of Probe objects from the domain record
             $probes = $domainRecord->getProbes();
@@ -62,7 +68,7 @@ class ProbeManager {
             $probeResults = ProbeManager::probe($domainRecord->domain, $probes);
 
             // combine the probe results together into one object
-            $output = ProbeRenderer::resultCombinedFormat($domainRecord, $probeResults, $probeDate);
+            $output = ProbeRenderer::resultCombinedFormat($domainRecord, $probeResults, $probeDate, $timeStamp);
 
             // create a name for the result file
             $fileName = $domainRecord->name."-".$probeDate;
@@ -71,7 +77,7 @@ class ProbeManager {
             FileSystem::save($output, $fileName, $this->savePath, FileSystem::$FILE_TYPE_JSON);
         }
 
-        $this->endTime = $this->getTime();
+        $this->endTime = $this->getMicroTime();
     }
 
     function probe($domain, $probes) {
