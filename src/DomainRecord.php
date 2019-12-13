@@ -79,7 +79,7 @@ class DomainRecord {
 
     public static function validate($domainRecord) {
         if(self::getState($domainRecord) == self::$DOMAIN_RECORD_INVALID) {
-            throw new ProbeException($domainRecord, self::$DOMAIN_RECORD_INVALID);
+            throw new DomainRecordException($domainRecord, self::$DOMAIN_RECORD_INVALID);
         }
     }
 
@@ -88,9 +88,11 @@ class DomainRecord {
         // check to see that a domain key exists and that the value starts with "http". If either is false, validation should fail
         if(!isset($domainRecord->domain)) {
             return self::$DOMAIN_RECORD_INVALID;
-        } else if (!preg_match("/^http/", $domainRecord->domain)) {
-            return self::$DOMAIN_RECORD_INVALID;            
-        }
+        } 
+        
+        // if (!preg_match("/^http/", $domainRecord->domain)) {
+        //     return self::$DOMAIN_RECORD_INVALID;            
+        // }
 
         // check that there is a "probes" key. If not, validation should fail and return immediately
         if(!isset($domainRecord->probes)) {

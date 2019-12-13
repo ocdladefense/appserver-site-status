@@ -13,6 +13,10 @@ class ProbeManager {
 
     }
 
+    function getDomainRecords() {
+        return $this->domainRecords;
+    }
+
     function getMicroTime() {
         return microtime(true);
     }
@@ -46,6 +50,32 @@ class ProbeManager {
         return $manager;
     }
 
+    public static function newFromUrl($url, $name) {
+        $manager = new ProbeManager();
+        
+        $domainRecord = $manager->makeDomainRecordFromUrl($url, $name);
+        $manager->domainRecords[$url] = $domainRecord;
+
+        return $manager;
+    }
+
+    public static function newFromDatabase($objects) {
+        $manager = new ProbeManager();
+
+        foreach($objects as $object) {
+            $domainRecord = $manager->makeDomainRecordFromUrl($object->url, $object->name);
+            $manager->domainRecords[$object->url] = $domainRecord;
+        }
+
+        return $manager;
+    }
+
+    function makeDomainRecordFromUrl($url, $name) {
+        $domainRecord = DomainRecord::makeDomainRecord($url);
+        $domainRecord->addName($name);
+        return $domainRecord;
+    }
+
     function doValidation() {
 
         foreach($this->domainRecords as $domainRecord) {
@@ -55,7 +85,8 @@ class ProbeManager {
         }
     }
 
-    function doProbes() {
+    function doProbes($save) {
+        $jsonOutput = [];
         $this->startTime = $this->getMicroTime();
 
         $timeStamp = $this->getTime();
@@ -70,14 +101,20 @@ class ProbeManager {
             // combine the probe results together into one object
             $output = ProbeRenderer::resultCombinedFormat($domainRecord, $probeResults, $probeDate, $timeStamp);
 
-            // create a name for the result file
-            $fileName = $domainRecord->name."-".$probeDate;
+            $jsonOutput[] = $output;
 
-            // save the output as a .json file
-            FileSystem::save($output, $fileName, $this->savePath, FileSystem::$FILE_TYPE_JSON);
+            if($save) {
+                // create a name for the result file
+                $fileName = $domainRecord->name."-".$probeDate;
+
+                // save the output as a .json file
+                FileSystem::save($output, $fileName, $this->savePath, FileSystem::$FILE_TYPE_JSON);
+            }
         }
 
         $this->endTime = $this->getMicroTime();
+
+        return $jsonOutput;
     }
 
     function probe($domain, $probes) {

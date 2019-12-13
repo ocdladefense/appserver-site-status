@@ -28,9 +28,9 @@ function siteStatusModRoutes() {
                 "FileSystem.php",
                 "DomainRecord.php",
                 "ProbeManager.php",
-                "DomainRecordManagerException.php",
+                "ProbeManagerException.php",
                 "Probe.php",
-                "ProbeException.php",
+                "DomainRecordException.php",
                 "ProbeRenderer.php",
                 "ProbeResult.php",
                 "ProbeResultCombinedFormat.php"
@@ -42,9 +42,38 @@ function siteStatusModRoutes() {
                 "FileSystem.php"
             )
         ),
-        "site-status" => array(
-            "content-type" => "application/json",
-            "callback" => "getSiteStatus"
+        "site-status-check-site" => array(
+            "content-type" => "json",
+            "method" => "post",
+            "callback" => "getSiteStatusFromUrl",
+            "files" => array(
+                "FileSystem.php",
+                "DomainRecord.php",
+                "ProbeManager.php",
+                "ProbeManagerException.php",
+                "Probe.php",
+                "DomainRecordException.php",
+                "ProbeRenderer.php",
+                "ProbeResult.php",
+                "ProbeResultCombinedFormat.php"
+            )
+            
+        ),
+        "site-status-load-sites" => array(
+            "content-type" => "json",
+            "method" => "post",
+            "callback" => "getSiteStatusesFromDatabase",
+            "files" => array(
+                "FileSystem.php",
+                "DomainRecord.php",
+                "ProbeManager.php",
+                "ProbeManagerException.php",
+                "Probe.php",
+                "DomainRecordException.php",
+                "ProbeRenderer.php",
+                "ProbeResult.php",
+                "ProbeResultCombinedFormat.php"
+            )
         )
     );
     return $siteStatusModRoutes;
@@ -54,14 +83,29 @@ function runProbes() {
     
     $probeManager = ProbeManager::newFromFileSystem(SITES_PATH);
     $probeManager->doValidation();
-    $probeManager->doProbes();
+    $probeManager->doProbes(true);
     $probeManager->renderOutput();
     // $domainRecord = DomainRecord::makeDomainRecord('www.google.com');
     // print_r($domainRecord);
 }
 
-function getSiteStatue($url, $status = "200") {
+function getSiteStatusFromUrl($json, $status = "200") {
+    //return print_r($json);
+    $object = JSON_Decode($json);
+    $probeManager = ProbeManager::newFromUrl($object->url, $object->name);
+    $probeManager->doValidation();
+    $output = $probeManager->doProbes(false);
+    return $output;
+    // $domainRecords = $probeManager->getDomainRecords();
+}
 
+function getSiteStatusesFromDatabase($json) {
+    $objects = JSON_Decode($json);
+
+    $probeManager = ProbeManager::newFromDatabase($objects);
+    $probeManager->doValidation();
+    $output = $probeManager->doProbes(false);
+    return $output;
 }
 
 
@@ -122,10 +166,14 @@ function allSiteStatus() {
 
 
     // load and render
+
     $template = new Template("site-status");
-    $content = $template->render(array("sites" => $siteStatuses));
-    $template = new Template("page");
-    return $template->render(array("content" => $content));
+    return $template->render(array("sites" => $siteStatuses));
+
+    // $template = new Template("site-status");
+    // $content = $template->render(array("sites" => $siteStatuses));
+    // $template = new Template("page");
+    // return $template->render(array("content" => $content));
 }
 
 

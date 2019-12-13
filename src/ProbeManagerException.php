@@ -1,6 +1,6 @@
 <?php
 // this class is used for creating a new custom exception when validation in DomainManager fails
-class DomainRecordManagerException extends Exception {
+class ProbeManagerException extends Exception {
 
     function __construct($domainRecord, $domainRecordStatus) {
 
