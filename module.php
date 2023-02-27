@@ -62,7 +62,16 @@ class SiteStatusModule extends Module {
 		foreach($vars as $label => $value) {
 			$out []= "<span class='label'>{$label}</span>: {$value}";
 		}
-		return implode("<br />",$out);
+
+		$incident = implode("<br />",$out);
+
+		$tpl = new Template("incident");
+		$tpl->addPath(__DIR__ . "/templates");
+
+		return $tpl->render(array(
+			"incident" => $incident,
+            "id" => $id
+		));
 	}
 
 
@@ -95,7 +104,18 @@ class SiteStatusModule extends Module {
 			fclose($handle);
 		}
 	
-		return "<div class='table-row'>" . implode("</div><div class='table-row'>", $rows) . "</div>";
+		$list = "<div class='table-row'>" . implode("</div><div class='table-row'>", $rows) . "</div>";
+
+
+
+		$tpl = new Template("incidents");
+		$tpl->addPath(__DIR__ . "/templates");
+
+
+
+		return $tpl->render(array(
+			"list" => $list
+		));
 	}
 
     /*
