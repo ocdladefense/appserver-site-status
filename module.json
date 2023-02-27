@@ -1,0 +1,19 @@
+{
+	"name": "site-status",
+	"description": "Record site maintenance and other incidents.",
+	"comment": "Module definition file.",
+	"connectedApp": "default",
+	"routes": {
+
+		"status/%id":{
+			"callback":"siteStatus",
+			"content-type":"text\/html"
+		},
+
+		"statuses":{
+			"callback":"siteStatuses",
+			"content-type":"text\/html"
+		}
+		
+	}
+}
