@@ -1,5 +1,5 @@
 {
-    "name": "clickpdx/sitestatus",
+    "name": "ocdladefense/appserver-site-status",
     "description": "Checks the status of sites.",
     "type": "wordpress-plugin",
     "authors": [
@@ -7,8 +7,5 @@
             "name": "Nicholas Glesmann",
             "email": "nicholasglesmann@gmail.com"
         }
-    ],
-    "require": {
-        "composer/installers":"~1.0"
-    }
+    ]
 }
